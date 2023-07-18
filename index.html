@@ -80,12 +80,12 @@
   <p>
     Our software allows for configuration settings to customize your experience. To configure the software, follow these steps:
   </p>
-  <ol>
+  <!-- <ol>
     <li>Create CloudFlare API credentials.</li>
     <li>Install Certbot and the CloudFlare DNS authenticator plugin.</li>
     <li>Run Certbot with the CloudFlare Authenticator.</li>
     <li>Automatic renewals.</li>
-  </ol>
+  </ol> -->
 
   <code>
     For further references use below links:
@@ -98,9 +98,60 @@
     If you encounter any issues or errors while using our software, please refer to the troubleshooting section in the user manual or contact our support team for assistance.
   </p> -->
 
-  <h2>Conclusion</h2>
+  <!-- <h2>Conclusion</h2>
   <p>
     Thank you for using our starting manual! We hope this documentation has provided the necessary information to help you get started and make the most out of our documentaion.
-  </p>
+  </p> -->
+
+  <div id="content" class="site-content">
+    <section id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+    <article id="post-3128" class="post-3128 post type-post status-publish format-standard hentry category-server tag-cloudflare tag-lets-encrypt entry">
+    <header class="entry-header default-max-width">
+    <h1 class="entry-title">Wildcard certificate from Let’s Encrypt with CloudFlare DNS</h1> <div class="entry-meta">
+    </div>
+    </header>
+    <div class="entry-content">
+    <p>If you’re using CloudFlare to host your DNS, there is a plugin for the official Let’s Encrypt client Certbot you can use to easily acquire and renew wildcard certificates from Let’s Encrypt.</p>
+    <span id="more-3128"></span>
+    <p>Note: This article has been changed to not use <code>pip</code> to install Certbot, but instead use the now available OS packages.</p>
+    <h2 class="wp-block-heading">CloudFlare API credentials</h2>
+    <p>Since we’re going to use CloudFlare’s DNS to verify our domain for Let’s Encrypt, we (or rather Certbot) will need to use CloudFlare’s API to create some verification DNS records on the fly.</p>
+    <p>To get your API key, login to your CloudFlare dashboard, go to your profile and at the bottom, click “View” next to “Global API key”. The Certbot plugin doesn’t support using the API token authentication method.</p>
+    <!-- <figure class="wp-block-image"><img decoding="async" width="1962" height="534" src="https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key.png" alt="" class="wp-image-3132" srcset="https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key.png 1962w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-300x82.png 300w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-768x209.png 768w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-1024x279.png 1024w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-1440x392.png 1440w" sizes="(max-width: 1962px) 100vw, 1962px"></figure> -->
+    <p>Now, when you get the key and you see the warning “Protect this key like a password!” this is an understatement. If you follow best practices, you have secured your CloudFlare account with two factor verification. Now, this API key is even more powerful than a password, as anyone using it doesn’t have to use two factor authentication. The email address associated with the account and this API key is all that is needed. Protect this key even better than your passwords!</p>
+    <p>Now store your credentials on your server, in a file that is readable by root only. I always store them in a file with a name that is logic to me, that these are secret credentials for CloudFlare, accessible by root only, namely: <br><code>/root/.secrets/cloudflare.ini</code></p>
+    <p>The directory should only be accessible by root:</p>
+    <pre class="wp-block-preformatted lang-shell">$ sudo chmod 0700 /root/.secrets/</pre>
+    <p>And the file too:</p>
+    <pre class="wp-block-preformatted lang-shell">$ sudo chmod 0400 /root/.secrets/cloudflare.ini</pre>
+    <p>The content will look somewhat like this. Replace the email address with your account email address, and the API key with the one you viewed in the CloudFlare admin panel earlier.</p>
+    <pre class="wp-block-preformatted lang-ini">dns_cloudflare_email = "youremail@example.com"<br>dns_cloudflare_api_key = "4003c330b45f4fbcab420eaf66b49c5cbcab4"</pre>
+    <h2 class="wp-block-heading">Install Certbot and the CloudFlare DNS authenticator plugin</h2>
+    <p>EFF now has a very nice official guide on how to install both Certbot and plugins on the site <a href="https://certbot.eff.org/instructions">https://certbot.eff.org/instructions</a></p>
+    <p>If you follow the instructions on the EFF site, make sure you select the “wildcard” tab, to get the installation instructions for the DNS authenticator plugin as well.</p>
+    <!-- <figure class="wp-block-image size-large"><img decoding="async" loading="lazy" width="1024" height="371" src="https://www.bjornjohansen.com/content/uploads/2019/11/Certbot_-_Ubuntubionic_Nginx-1024x371.png" alt="" class="wp-image-3205" srcset="https://www.bjornjohansen.com/content/uploads/2019/11/Certbot_-_Ubuntubionic_Nginx-1024x371.png 1024w, https://www.bjornjohansen.com/content/uploads/2019/11/Certbot_-_Ubuntubionic_Nginx-300x109.png 300w, https://www.bjornjohansen.com/content/uploads/2019/11/Certbot_-_Ubuntubionic_Nginx-768x278.png 768w, https://www.bjornjohansen.com/content/uploads/2019/11/Certbot_-_Ubuntubionic_Nginx-1536x557.png 1536w, https://www.bjornjohansen.com/content/uploads/2019/11/Certbot_-_Ubuntubionic_Nginx-2048x742.png 2048w, https://www.bjornjohansen.com/content/uploads/2019/11/Certbot_-_Ubuntubionic_Nginx-1440x522.png 1440w" sizes="(max-width: 1024px) 100vw, 1024px"></figure> -->
+    <p>Here are the instructions if you’re using Ubuntu:</p>
+    <pre class="wp-block-preformatted lang-shell">$ sudo apt-get update
+    $ sudo apt-get install software-properties-common
+    $ sudo add-apt-repository universe
+    $ sudo add-apt-repository ppa:certbot/certbot
+    $ sudo apt-get update
+    $ sudo apt-get install certbot python-certbot-nginx python3-certbot-dns-cloudflare</pre>
+    <p>If you are running a different Linux distribution, use the <a href="https://certbot.eff.org/instructions">Certbot installtion guide</a> mentioned above.</p>
+    <p>Now you should have Certbot installed in <code>/usr/bin/certbot</code>, and have the CloudFlare DNS Authenticator plugin installed and activated along with it. Smooth, huh?</p>
+    <h2 class="wp-block-heading">Run Certbot with the CloudFlare Authenticator</h2>
+    <p>Now, getting a new wildcard is as simple as running:</p>
+    <pre class="wp-block-preformatted lang-shell">$ sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/cloudflare.ini -d example.com,*.example.com --preferred-challenges dns-01</pre>
+    <p>This should fetch a new wildcard certificate for you for *.example.com and store it in <code>/etc/letsencrypt/live/example.com/fullchain.pem</code></p>
+    <h3 class="wp-block-heading"><code></code>Automatic renewals</h3>
+    <p>Now, if you run <code>certbot renew</code>, your certificate should be renewed if it is time to do so. This will be done using the secret credentials you saved, so no interaction is needed. If you like, you can test it by providing the <code>--dry-run</code> argument like this:</p>
+    <pre class="wp-block-code"><code>$ certbot renew --dry-run</code></pre>
+    <p>It might be a good idea to create a crontab entry like this:</p>
+    <pre class="wp-block-preformatted nohighlight">14 5 * * * /usr/bin/certbot renew --quiet --post-hook "/usr/sbin/service nginx reload" &gt; /dev/null 2&gt;&amp;1</pre>
+    <p>Now your wildcard certificate will renew fully automatically without any interaction needed on your side.</p>
+    </div>
+    <footer class="entry-footer default-max-width">
+    
 </body>
 </html>
