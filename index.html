@@ -35,53 +35,72 @@
   </style>
 </head>
 <body>
-  <h1>Software Documentation</h1>
+  <h1>Cloudfare Wildcard SSL Documentation</h1>
   
   <h2>Introduction</h2>
   <p>
-    Welcome to the documentation for our software! This documentation provides information and instructions on how to use our software effectively.
+    Welcome to the Configuration documentation for our software! This documentation provides information and instructions on how to use our software effectively.
   </p>
-  
-  <h2>Installation</h2>
-  <p>
-    To install our software, follow these steps:
-  </p>
-  <ol>
-    <li>Download the software package from our website.</li>
-    <li>Extract the package to a desired location on your computer.</li>
-    <li>Open the extracted folder and run the installer.</li>
-    <li>Follow the on-screen instructions to complete the installation.</li>
-  </ol>
-  
-  <h2>Usage</h2>
-  <p>
-    To use our software, follow these steps:
-  </p>
-  <ol>
-    <li>Launch the software by double-clicking the desktop shortcut or opening it from the Start menu.</li>
-    <li>Once the software is open, you will be presented with the main interface.</li>
-    <li>Use the various features and options provided to perform your desired tasks.</li>
-    <li>Refer to the <code>Help</code> menu or the accompanying user manual for detailed instructions on specific features.</li>
-  </ol>
   
   <h2>Configuration</h2>
+  <p>
+    To use wildcard in cloudfare, follow these steps:
+  </p>
+  <ol>
+    <li>First we must configure cloudfare as a dns.</li>
+    <li>then we activate wildcard ssl.</li>
+  </ol>
+  
+  <h2>Cloudfare DNS configuration:</h2>
+  <p>
+    To use CLoudfare DNS, follow these steps:
+  </p>
+  <ol>
+    <li>First find the domain registrar for our case it is amazon route 53.</li>
+    <li>then go to cloudfare dashboard and you will see add site.</li>
+    <li>follow the add site documentaion from cloudfare <a href="https://developers.cloudflare.com/dns/zone-setups/full-setup/setup"><code>https://developers.cloudflare.com/dns/zone-setups/full-setup/setup</code></a>
+      for detailed instructions on specific features.
+    </li>
+    <!-- <li><a href="https://developers.cloudflare.com/dns/zone-setups/full-setup/setup"><code>https://developers.cloudflare.com/dns/zone-setups/full-setup/setup</code></a></li> -->
+    
+    <!-- <li>Refer to the <code>Help</code> menu or the accompanying user manual for detailed instructions on specific features.</li> -->
+  </ol>
+
+  <code>
+    For further references use below links:
+    <!-- <p></p> -->
+    <br />
+    &emsp;<a href="https://developers.cloudflare.com/fundamentals/get-started/setup/add-site/">https://developers.cloudflare.com/fundamentals/get-started/setup/add-site/</a>
+    <!-- <p></p> -->
+    <br />
+    &emsp;<a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-name-servers-glue-records.html#domain-name-servers-glue-records-adding-changing">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-name-servers-glue-records.html#domain-name-servers-glue-records-adding-changing</a>      
+  </code>
+  
+  <h2>Cloudfare wildcard configuration:</h2>
   <p>
     Our software allows for configuration settings to customize your experience. To configure the software, follow these steps:
   </p>
   <ol>
-    <li>Open the <code>Settings</code> menu or click on the gear icon in the toolbar.</li>
-    <li>From the settings window, adjust the desired options to your preference.</li>
-    <li>Click on the <code>Save</code> or <code>Apply</code> button to apply the changes.</li>
+    <li>Create CloudFlare API credentials.</li>
+    <li>Install Certbot and the CloudFlare DNS authenticator plugin.</li>
+    <li>Run Certbot with the CloudFlare Authenticator.</li>
+    <li>Automatic renewals.</li>
   </ol>
+
+  <code>
+    For further references use below links:
+    <br />
+    &emsp;<a href="https://www.bjornjohansen.com/wildcard-certificate-letsencrypt-cloudflare">https://www.bjornjohansen.com/wildcard-certificate-letsencrypt-cloudflare</a>
+ </code>
   
-  <h2>Troubleshooting</h2>
+  <!-- <h2>Troubleshooting</h2>
   <p>
     If you encounter any issues or errors while using our software, please refer to the troubleshooting section in the user manual or contact our support team for assistance.
-  </p>
-  
+  </p> -->
+
   <h2>Conclusion</h2>
   <p>
-    Thank you for using our software! We hope this documentation has provided the necessary information to help you get started and make the most out of our software.
+    Thank you for using our starting manual! We hope this documentation has provided the necessary information to help you get started and make the most out of our software.
   </p>
 </body>
 </html>
