@@ -115,7 +115,11 @@
     <p>If you’re using CloudFlare to host your DNS, there is a plugin for the official Let’s Encrypt client Certbot you can use to easily acquire and renew wildcard certificates from Let’s Encrypt.</p>
     <span id="more-3128"></span>
     <p>Note: This article has been changed to not use <code>pip</code> to install Certbot, but instead use the now available OS packages.</p>
+
     <h2 class="wp-block-heading">CloudFlare API credentials</h2>
+
+    <!-- <h4>The following method is not recommended</h4> -->
+  
     <p>Since we’re going to use CloudFlare’s DNS to verify our domain for Let’s Encrypt, we (or rather Certbot) will need to use CloudFlare’s API to create some verification DNS records on the fly.</p>
     <p>To get your API key, login to your CloudFlare dashboard, go to your profile and at the bottom, click “View” next to “Global API key”. The Certbot plugin doesn’t support using the API token authentication method.</p>
     <!-- <figure class="wp-block-image"><img decoding="async" width="1962" height="534" src="https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key.png" alt="" class="wp-image-3132" srcset="https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key.png 1962w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-300x82.png 300w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-768x209.png 768w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-1024x279.png 1024w, https://www.bjornjohansen.com/content/uploads/2018/08/cloudflare-view-api-key-1440x392.png 1440w" sizes="(max-width: 1962px) 100vw, 1962px"></figure> -->
@@ -127,6 +131,99 @@
     <pre class="wp-block-preformatted lang-shell">$ sudo chmod 0400 /root/.secrets/cloudflare.ini</pre>
     <p>The content will look somewhat like this. Replace the email address with your account email address, and the API key with the one you viewed in the CloudFlare admin panel earlier.</p>
     <pre class="wp-block-preformatted lang-ini">dns_cloudflare_email = "youremail@example.com"<br>dns_cloudflare_api_key = "4003c330b45f4fbcab420eaf66b49c5cbcab4"</pre>
+
+    <p>The above Global key is not recommended instead use <code> Cloudflare API key </code> follow the below certbot-dns-cloudflare’s documentation! </p>
+
+    <code>
+
+     <a class="reference external" href="https://certbot-dns-cloudflare.readthedocs.io">certbot-dns-cloudflare</a>
+     <br />
+     <a href="https://certbot-dns-cloudflare.readthedocs.io/en/stable/">https://certbot-dns-cloudflare.readthedocs.io/en/stable/</a>
+    </code>
+
+    <section id="credentials">
+      <h2>Credentials<a class="headerlink" href="#credentials" title="Permalink to this heading">¶</a></h2>
+      <p>Use of this plugin requires a configuration file containing Cloudflare API
+      credentials, obtained from your
+      <a class="reference external" href="https://dash.cloudflare.com/?to=/:account/profile/api-tokens">Cloudflare dashboard</a>.</p>
+      <p>Previously, Cloudflare’s “Global API Key” was used for authentication, however
+      this key can access the entire Cloudflare API for all domains in your account,
+      meaning it could cause a lot of damage if leaked.</p>
+      <p>Cloudflare’s newer API Tokens can be restricted to specific domains and
+      operations, and are therefore now the recommended authentication option.</p>
+      <p>The Token needed by Certbot requires <code class="docutils literal notranslate"><span class="pre">Zone:DNS:Edit</span></code> permissions for only the
+      zones you need certificates for.</p>
+      <p>Using Cloudflare Tokens also requires at least version 2.3.1 of the <code class="docutils literal notranslate"><span class="pre">cloudflare</span></code>
+      Python module. If the version that automatically installed with this plugin is
+      older than that, and you can’t upgrade it on your system, you’ll have to stick to
+      the Global key.</p>
+      <div class="literal-block-wrapper docutils container" id="certbot-cloudflare-token-ini">
+      <div class="code-block-caption"><span class="caption-text">Example credentials file using restricted API Token (recommended):</span><a class="headerlink" href="#certbot-cloudflare-token-ini" title="Permalink to this code">¶</a></div>
+      <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cloudflare API token used by Certbot</span>
+      <span class="na">dns_cloudflare_api_token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0123456789abcdef0123456789abcdef01234567</span>
+      </pre></div>
+      </div>
+      </div>
+
+      <p>for creating cloudfare restricted API Token follow the links below</p>
+
+      <code>
+        <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">https://developers.cloudflare.com/fundamentals/api/get-started/create-token/</a>
+       
+      </code>
+      <p></p>
+
+      <code>
+        Use the recommended artcicle below to create cloudfare restricted API Token
+        <br>
+        <a href="https://www.cyberciti.biz/faq/issue-lets-encrypt-wildcard-certificate-with-acme-sh-and-cloudflare-dns/">https://www.cyberciti.biz/faq/issue-lets-encrypt-wildcard-certificate-with-acme-sh-and-cloudflare-dns/</a>
+      <br>
+      </code>
+
+      <br>
+
+
+      <div class="literal-block-wrapper docutils container" id="certbot-cloudflare-key-ini">
+      <div class="code-block-caption"><span class="caption-text">Example credentials file using Global API Key (not recommended):</span><a class="headerlink" href="#certbot-cloudflare-key-ini" title="Permalink to this code">¶</a></div>
+      <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cloudflare API credentials used by Certbot</span>
+      <span class="na">dns_cloudflare_email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cloudflare@example.com</span>
+      <span class="na">dns_cloudflare_api_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0123456789abcdef0123456789abcdef01234</span>
+      </pre></div>
+      </div>
+      </div>
+      <p>The path to this file can be provided interactively or using the
+      <code class="docutils literal notranslate"><span class="pre">--dns-cloudflare-credentials</span></code> command-line argument. Certbot records the path
+      to this file for use during renewal, but does not store the file’s contents.</p>
+      <div class="admonition caution">
+      <p class="admonition-title">Caution</p>
+      <p>You should protect these API credentials as you would the password to your
+      Cloudflare account. Users who can read this file can use these credentials
+      to issue arbitrary API calls on your behalf. Users who can cause Certbot to
+      run using these credentials can complete a <code class="docutils literal notranslate"><span class="pre">dns-01</span></code> challenge to acquire
+      new certificates or revoke existing certificates for associated domains,
+      even if those domains aren’t being managed by this server.</p>
+      </div>
+      <p>Certbot will emit a warning if it detects that the credentials file can be
+      accessed by other users on your system. The warning reads “Unsafe permissions
+      on credentials configuration file”, followed by the path to the credentials
+      file. This warning will be emitted each time Certbot uses the credentials file,
+      including for renewal, and cannot be silenced except by addressing the issue
+      (e.g., by using a command like <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">600</span></code> to restrict access to the file).</p>
+      <div class="admonition note">
+      <p class="admonition-title">Note</p>
+      <p>Please note that the <code class="docutils literal notranslate"><span class="pre">cloudflare</span></code> Python module used by the plugin has
+      additional methods of providing credentials to the module, e.g. environment
+      variables or the <code class="docutils literal notranslate"><span class="pre">cloudflare.cfg</span></code> configuration file. These methods are not
+      supported by Certbot. If any of those additional methods of providing
+      credentials is being used, they must provide the same credentials (i.e.,
+      email and API key <em>or</em> an API token) as the credentials file provided to
+      Certbot. If there is a discrepancy, the <code class="docutils literal notranslate"><span class="pre">cloudflare</span></code> Python module will
+      raise an error. Also note that the credentials provided to Certbot will take
+      precedence over any other method of providing credentials to the <code class="docutils literal notranslate"><span class="pre">cloudflare</span></code>
+      Python module.</p>
+      </div>
+      </section>
+
     <h2 class="wp-block-heading">Install Certbot and the CloudFlare DNS authenticator plugin</h2>
     <p>EFF now has a very nice official guide on how to install both Certbot and plugins on the site <a href="https://certbot.eff.org/instructions">https://certbot.eff.org/instructions</a></p>
     <p>If you follow the instructions on the EFF site, make sure you select the “wildcard” tab, to get the installation instructions for the DNS authenticator plugin as well.</p>
@@ -138,7 +235,9 @@
     $ sudo add-apt-repository ppa:certbot/certbot
     $ sudo apt-get update
     $ sudo apt-get install certbot python-certbot-nginx python3-certbot-dns-cloudflare</pre>
+
     <p>If you are running a different Linux distribution, use the <a href="https://certbot.eff.org/instructions">Certbot installtion guide</a> mentioned above.</p>
+    
     <p>Now you should have Certbot installed in <code>/usr/bin/certbot</code>, and have the CloudFlare DNS Authenticator plugin installed and activated along with it. Smooth, huh?</p>
     <h2 class="wp-block-heading">Run Certbot with the CloudFlare Authenticator</h2>
     <p>Now, getting a new wildcard is as simple as running:</p>
